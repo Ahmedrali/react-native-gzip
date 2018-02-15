@@ -8,8 +8,7 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_REMAP_METHOD(gunzip,
-                 filePath: (NSString *) source
+RCT_EXPORT_METHOD(gunzip:(NSString *) source
                  toFolder: (NSString *) folder
                  force: (BOOL) force
                  resolver: (RCTPromiseResolveBlock)resolve
@@ -40,6 +39,26 @@ RCT_REMAP_METHOD(gunzip,
         return;
     }
 
+    resolve(@{@"path": folder});
+}
+
+RCT_EXPORT_METHOD(gzip: (NSString *) source
+                 toFolder: (NSString *) folder
+                 resolver: (RCTPromiseResolveBlock)resolve
+                 rejecter: (RCTPromiseRejectBlock)reject)
+{
+    NSFileManager *manager = [NSFileManager defaultManager];
+    
+    if (![manager fileExistsAtPath:source]) {
+        reject(@"-2", @"file not found", nil);
+        return;
+    }
+    
+    if (![DCTar compressFileAtPath:source toPath:folder error:nil]) {
+        reject(@"-3", @"error while decompressing", nil);
+        return;
+    }
+    
     resolve(@{@"path": folder});
 }
 

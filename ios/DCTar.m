@@ -140,12 +140,9 @@ static const char template_header[] = {
             
         }
         if(doGzip) {
-            NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:workPath];
+            NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:filePath];
             status = [self fileDeflate:fileHandle isGzip:YES toPath:path];
             [fileHandle closeFile];
-            if(status) {
-                [manager removeItemAtPath:workPath error:nil]; //remove our temp tar file
-            }
         }
         return status;
     }

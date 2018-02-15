@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.zip.GZIPOutputStream;
 
 public class RNGZipManager extends ReactContextBaseJavaModule {
     public RNGZipManager(ReactApplicationContext reactContext) {
@@ -99,6 +100,32 @@ public class RNGZipManager extends ReactContextBaseJavaModule {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @ReactMethod
+    public void gzip(String source, String dest, Promise promise) {
+        File sourceFile = new File(source);
+
+        byte[] buffer = new byte[1024];
+        try{
+            GZIPOutputStream gzipOutStream =
+                    new GZIPOutputStream(new FileOutputStream(dest));
+
+            FileInputStream in =
+                    new FileInputStream(source);
+
+            int len;
+            while ((len = in.read(buffer)) > 0) {
+                gzipOutStream.write(buffer, 0, len);
+            }
+            in.close();
+            gzipOutStream.finish();
+            gzipOutStream.close();
+
+            promise.resolve(dest);
+        }catch(IOException ex){
+            promise.reject("-2", ex);
         }
     }
 }

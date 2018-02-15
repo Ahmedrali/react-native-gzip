@@ -13,3 +13,7 @@ exports.gunzip = function gunzip (file, destinationFolder, force = false) {
 exports.gunzipForce = function gunzip (file, destinationFolder) {
   return NativeRNGZip.gunzip(file, destinationFolder, true)
 }
+
+exports.gzip = function gzip (file, destinationFolder) {
+  return NativeRNGZip.gzip(file, destinationFolder)
+}
